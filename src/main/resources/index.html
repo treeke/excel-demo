@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>index</title>
+</head>
+<body>
+<canvas id="can" height="250" width="500">
+</canvas>
+</body>
+<script type="text/javascript">
+draw();
+function draw(){
+    var cnvs = document.getElementById('can');
+    cnvs.height = 300;
+    cnvs.width = 500;
+    cnvs.style = 'background-color: #000;'
+    
+    setInterval(function run () {
+      var getData = genGetData(cnvs.width);
+      scrollDown(cnvs);
+      rainbowRow(cnvs,getData);
+    }, 40);
+    return cnvs;
+  };
+    
+function genGetData(length){
+	var arr = new Array(length);
+	    for (var i = 0; i < length; i++) {
+	      arr[i] = Math.random() * (1 << 8);
+	  };
+	    return arr;
+};
+function rainbowCol(cnvs,arr){
+	var w = cnvs.width;
+	  var h = arr.length;
+	  var cxt = cnvs.getContext('2d');
+	  for (var i = 0; i < h; i++) {
+	    cxt.fillStyle = 'hsl(' + (256 - arr[i]) + ', 100%, 50%)';
+	    cxt.fillRect(w - 1, i + 0.5, 1, 1);
+	  }
+};
+function rainbowRow(cnvs,arr){
+	var w = cnvs.width;
+	var h = arr.length;
+	var cxt = cnvs.getContext('2d');
+	  for (var i = 0; i < w; i++) {
+	    cxt.fillStyle = 'hsl(' + (256 - arr[i]) + ', 100%, 50%)';
+	    cxt.fillRect(i + 0.5, 0, 1, 1);
+	  }
+};
+function scrollLeft(cnvs){
+	var w = cnvs.width;
+	  var h = cnvs.height;
+	  var cxt = cnvs.getContext('2d');
+	  cxt.drawImage(cnvs, 1, 0, w, h, 0, 0, w, h);
+};
+function scrollDown(cnvs){
+	var w = cnvs.width;
+	var h = cnvs.height;
+	var cxt = cnvs.getContext('2d');
+	  cxt.drawImage(cnvs, 0, 0, w, h, 0, 1, w, h);
+};
+
+</script>
+</html>
