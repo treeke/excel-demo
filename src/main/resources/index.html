@@ -5,8 +5,10 @@
 <title>index</title>
 </head>
 <body>
-<canvas id="can" height="250" width="500">
+<div style="width:500px; height:300px; border:1px solid=#F00; position:relative" >
+<canvas id="can" height="300" width="500" style="position:absolute">
 </canvas>
+</div>
 </body>
 <script type="text/javascript">
 draw();
@@ -14,22 +16,26 @@ function draw(){
     var cnvs = document.getElementById('can');
     cnvs.height = 300;
     cnvs.width = 500;
-    cnvs.style = 'background-color: #000;'
-    
+    cnvs.style = 'background-color: #FFF;'
+    	var a = 0;
     setInterval(function run () {
-      var getData = genGetData(cnvs.width);
+    	a = a+0.2;	
+      var getData = genGetData(cnvs.width,a);
       scrollDown(cnvs);
       rainbowRow(cnvs,getData);
-    }, 5);
+    }, 10);
+   
     return cnvs;
   };
+  
     
-function genGetData(length){
+function genGetData(length,a){
 	var arr = new Array(length);
-	    for (var i = 0; i < length; i++) {
-	      arr[i] = Math.random() * (1 << 8);
-	  };
-	    return arr;
+		 for (var i = 0; i < length; i++) {
+		      a = a+0.2;
+		      arr[i] = a;
+		  };
+		    return arr;
 };
 function rainbowCol(cnvs,arr){
 	var w = cnvs.width;
@@ -45,9 +51,39 @@ function rainbowRow(cnvs,arr){
 	var h = arr.length;
 	var cxt = cnvs.getContext('2d');
 	  for (var i = 0; i < w; i++) {
-	    cxt.fillStyle = 'hsl(' + (256 - arr[i]) + ', 100%, 50%)';
-	    cxt.fillRect(i + 0.5, 0, 1, 1);
+	    cxt.fillStyle = 'hsl(' + arr[i] + ', 100%, 50%)';
+	    cxt.fillRect(i, 0, 1, 1);
 	  }
+	  //鼠标按下，将鼠标按下坐标保存在x,y中  
+	   /*  cnvs.onmousedown = function(ev){  
+	        var e = ev||event;  
+	        var x = e.clientX;  
+	        var y = e.clientY;  
+	        drag(x,y);  
+	    };   */
+	    //拖拽函数  
+	    /* function drag(x,y){  
+	        // 按下鼠标判断鼠标位置是否在圆上，当画布上有多个路径时，isPointInPath只能判断最后那一个绘制的路径  
+	        if(cxt.isPointInPath(x,y)){  
+	            //路径正确，鼠标移动事件  
+	            cnvs.onmousemove = function(ev){  
+	                var e = ev||event;  
+	                var ax = e.clientX;  
+	                var ay = e.clientY;  
+	                //鼠标移动每一帧都清楚画布内容，然后重新画圆  
+	                cxt.clearRect(0,0,cnvs.width,cnvs.height);  
+	                for (var i = 0; i < w; i++) {
+	            	    cxt.fillStyle = 'hsl(' + arr[i] + ', 100%, 50%)';
+	            	    cxt.fillRect(i, 0, 1, 1);
+	            	  }
+	            };  
+	            //鼠标移开事件  
+	            cnvs.onmouseup = function(){  
+	            	cnvs.onmousemove = null;  
+	            	cnvs.onmouseup = null;  
+	            }; 
+	        };   
+	    }  */
 };
 function scrollLeft(cnvs){
 	var w = cnvs.width;
