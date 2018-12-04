@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div
+		style="position: relative; margin-bottom: -35px; margin-left: 1px; left:50px;">
+		<canvas id="can-vs" height="313" width="513"
+			style="position: absolute; margin-bottom: -35px;margin-left:20px">
+</canvas>
+	</div>
+	<div
+		style="position: relative; left: 63px; top: 0px; margin-top: -316px;">
+		<canvas id="can" height="300" width="500"
+			style="position: absolute; margin-top: 1px;">
+</canvas>
+	</div>
+	<div style="margin: 13px">
+		<span>1</span> <span>2</span> <span>3</span>
+	</div>
+
+</body>
+<script src="echarts.min.js"></script>
+<script type="text/javascript">
+	var cnvs = document.getElementById('can-vs');
+	var line = 10;
+	var lineWidth = 3;
+	cnvs.height = 313;
+	cnvs.width = 513;
+	cnvs.style = 'background-color: #fff;'
+	var cxt = cnvs.getContext('2d');
+	cxt.beginPath(); //新建一条path
+	//绘制Y轴刻度线
+	for (var i = 13; i < 313; i = i + 50) {
+		 cxt.font = "15px sans-serif"
+	    cxt.fillText("1", 0, i);
+		 cxt.moveTo(0, i); //把画笔移动到指定的坐标
+		cxt.lineTo(line, i);  
+	}
+	cxt.closePath();
+	cxt.stroke(); //绘制路径。 
+	cxt.beginPath(); //新建一条path
+	cxt.moveTo(line, 0); //把画笔移动到指定的坐标
+	cxt.lineTo(line, cnvs.height - line); //绘制一条从当前位置到指定坐标(200, 50)的直线. 
+	cxt.moveTo(line, cnvs.height - line); //把画笔移动到指定的坐标
+	cxt.lineTo(cnvs.width, cnvs.height - line); //绘制一条从当前位置到指定坐标(200, 50)的直线. 
+	//闭合路径。会拉一条从当前点到path起始点的直线。如果当前点与起始点重合，则什么都不做
+	cxt.lineWidth = lineWidth;
+	cxt.closePath();
+	cxt.stroke(); //绘制路径。
+	cxt.beginPath(); //新建一条path
+	//绘制X轴刻度线
+	for (var i = 50 + line; i <= cnvs.width; i = i + 50) {
+		cxt.moveTo(i, cnvs.height - line); //把画笔移动到指定的坐标
+		cxt.lineTo(i, cnvs.height); //绘制一条从当前位置到指定坐标(200, 50)的直线.
+		cxt.lineWidth = 2;
+	}
+
+	//cxt.fill();
+	cxt.closePath();
+	cxt.stroke(); //绘制路径。
+</script>
+<script type="text/javascript">
+    draw();
+	function draw() {
+		var cnvs = document.getElementById('can');
+		cnvs.height = 300;
+		cnvs.width = 500;
+		cnvs.style = 'background-color: #fff;'
+		setInterval(function run() {
+			const getData = genGetData(cnvs.width);
+			scrollDown(cnvs);
+			rainbowRow(cnvs, getData);
+		}, 1);
+		return cnvs;
+	};
+
+	function genGetData(length) {
+		var arr = new Array(length);
+		for (var i = 0; i < length; i++) {
+			arr[i] = Math.random() * (1 << 8);
+		}
+		;
+		return arr;
+	};
+
+	function rainbowRow(cnvs, arr) {
+		const w = cnvs.width;
+		const cxt = cnvs.getContext('2d');
+		for (var i = 0; i < w; i++) {
+			cxt.fillStyle = 'hsl(' + (256 - arr[i]) + ', 100%, 50%)';
+			cxt.fillRect(i + 0.5, 0, 1, 1);
+		}
+
+	};
+
+	function scrollDown(cnvs) {
+		const w = cnvs.width;
+		const h = cnvs.height;
+		const cxt = cnvs.getContext('2d');
+		cxt.drawImage(cnvs, 0, 0, w, h, 0, 1, w, h);
+	}; 
+</script>
+</html>
