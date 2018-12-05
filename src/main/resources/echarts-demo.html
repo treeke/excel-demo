@@ -6,46 +6,94 @@
 <script src="echarts.min.js"></script>
 </head>
 <body>
- <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
-    <div id="main" style="width: 600px;height:400px;"></div>
-    <script type="text/javascript">
-        // 基于准备好的dom，初始化echarts实例
-        var myChart = echarts.init(document.getElementById('main'));
-        var date = new Date().toLocaleString();
-        var i = 0;
-        var arr = new Array();
-       
-        setInterval(run,1000);
-        function run(){
-        	if(i>5){
-        		arr.shift();
-        	}
-        	arr.push(new Date().toLocaleString().split("午")[1]);
-        	i++;
-        	// 使用刚指定的配置项和数据显示图表。
-            myChart.setOption(option);
-        }
-        var xdata= ['800KHZ', '800KHZ', '800KHZ', '800KHZ', '800KHZ', '800KHZ', '800KHZ'];
-        // 指定图表的配置项和数据
-        var option = {
-            title: {
-                text: 'ECharts 入门示例'
-            },
-            xAxis: {
-                type: 'category',
-                data: xdata,
-            },
-            yAxis: {
-                type: 'category',
-                data: arr,
-            },
-            
-        };
+	<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+	<div id="main" style="width: 625px; height: 420px;"></div>
+	<div
+		style="position: relative; left: 63px; top: 0px; margin-top: -360px;">
+		<canvas id="can" height="300" width="500"
+			style="position: absolute; margin-top: 1px;">
+        </canvas>
+	</div>
+	<script type="text/javascript">
+		// 基于准备好的dom，初始化echarts实例
+		var myChart = echarts.init(document.getElementById('main'));
+		var date = new Date().toLocaleString();
+		var i = 0;
+		var arr = new Array();
 
-	
+		setInterval(run, 1000);
+		function run() {
+			if (i > 5) {
+				arr.shift();
+			}
+			arr.push(new Date().toLocaleString().split("午")[1]);
+			i++;
+			// 使用刚指定的配置项和数据显示图表。
+			myChart.setOption(option);
+		}
+		var xdata = [ '800KHZ', '800KHZ', '800KHZ', '800KHZ', '800KHZ',
+				'800KHZ', '800KHZ' ];
+		// 指定图表的配置项和数据
+		var option = {
+			title : {
+				text : 'ECharts 入门示例'
+			},
+			xAxis : {
+				//name: '频率',
+				nameLocation: 'middle',
+				type : 'category',
+				data : xdata,
+			},
+			yAxis : {
+				//name: '时间',
+				nameLocation: 'middle',
+				type : 'category',
+				data : arr,
+			},
 
-        
-    </script>
+		};
+	</script>
+	<script type="text/javascript">
+    draw();
+	function draw() {
+		var cnvs = document.getElementById('can');
+		cnvs.height = 300;
+		cnvs.width = 500;
+		cnvs.style = 'background-color: #fff;'
+		setInterval(function run() {
+			const getData = genGetData(cnvs.width);
+			rainbowRow(cnvs, getData);
+			scrollDown(cnvs);
+		}, 20);
+		return cnvs;
+	};
+
+	function genGetData(length) {
+		var arr = new Array(length);
+		for (var i = 0; i < length; i++) {
+			arr[i] = Math.random() * (1 << 8);
+		}
+		;
+		return arr;
+	};
+
+	function rainbowRow(cnvs, arr) {
+		const w = cnvs.width;
+		const cxt = cnvs.getContext('2d');
+		for (var i = 0; i < w; i++) {
+			cxt.fillStyle = 'hsl(' + (256 - arr[i]) + ', 100%, 50%)';
+			cxt.fillRect(i, 0, 1, 1);
+		}
+
+	};
+
+	function scrollDown(cnvs) {
+		const w = cnvs.width;
+		const h = cnvs.height;
+		const cxt = cnvs.getContext('2d');
+		cxt.drawImage(cnvs, 0, 0, w, h, 0, 1, w, h);
+	}; 
+</script>
 
 </body>
 

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="echarts.min.js"></script>
+</head>
+<body>
+<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+	<div id="main" style="width: 800px; height: 500px;"></div>
+	<script type="text/javascript">
+	var myChart = echarts.init(document.getElementById('main'));
+	
+	var HData = [500, 800, 2000, 9000, 10500, 7500, 6900];
+	var LData = [450, 600, 1750, 5000, 9000, 7000, 6000];
+	var time = ['08:00','08:01','08:02','08:03','08:04','08:05','08:06'],
+	
+	option = {
+			//backgroundColor:'#7A8B8B',
+		    title: {
+		        text: '频谱图',
+		        subtext: '单位:KHZ'
+		    },
+		    tooltip: {
+		        trigger: 'axis'
+		        /* formatter: function (params) {
+		        	console.log(params);
+            return params;
+        } */
+		    },
+		    legend: {
+		        data:['高频','低频']
+		    },
+		    toolbox: {
+		        show: true,
+		        feature: {
+		            dataZoom: {
+		                yAxisIndex: 'none'
+		            },
+		            dataView: {readOnly: false},
+		            //magicType: {type: ['line', 'bar']},
+		            restore: {},
+		            saveAsImage: {}
+		        }
+		    },
+		    xAxis:  {
+		        type: 'category',
+		        boundaryGap: false,
+		        data: time
+		    },
+		    yAxis: {
+		        type: 'value',
+		        axisLabel: {
+		            formatter: '{value} KHZ'
+		        }
+		    },
+		    series: [
+		        {
+		            name:'高频',
+		            type:'line',
+		            data: HData,
+		            markPoint: {
+		                data: [
+		                    {type: 'max', name: '最大值'},
+		                    {type: 'min', name: '最小值'}
+		                ]
+		            },
+		            markLine: {
+		                data: [
+		                    {type: 'average', name: '平均值'}
+		                ]
+		            },
+		           
+		        },
+		        {
+		            name:'低频',
+		            type:'line',
+		            data:LData,
+		            markPoint: {
+		                data: [
+		                    {name: '周最低', value: -2, xAxis: 1, yAxis: -1.5}
+		                ]
+		            },
+		            markLine: {
+		                data: [
+		                    {type: 'average', name: '平均值'},
+		                    [{
+		                        symbol: 'none',
+		                        x: '90%',
+		                        yAxis: 'max'
+		                    }, {
+		                        symbol: 'circle',
+		                        label: {
+		                            normal: {
+		                                position: 'start',
+		                                formatter: '最大值'
+		                            }
+		                        },
+		                        type: 'max',
+		                        name: '最高点'
+		                    }]
+		                ]
+		            },
+		            /* itemStyle : {  
+                        normal : {  
+                            lineStyle:{  
+                                color:'#66CD00'  
+                            }  
+                        }  
+                    },  */
+		        }
+		    ]
+		};
+	function data(){
+		    var h = Math.round(Math.random()*12000);
+		    var l = Math.round(Math.random()*12000);
+		    while(h<l){
+		    	 l = Math.round(Math.random()*12000)
+		    	 if(h<l)continue;
+		    }
+		    if(time.length>20){
+		        HData.shift();
+		        LData.shift();
+		        time.shift();
+		    }
+		        time.push(new Date().toLocaleString().split("午")[1])
+		        HData.push(h);
+		        LData.push(l);
+	}
+	setInterval(function () {
+       data();
+	    
+
+	    myChart.setOption(option);
+	}, 1000);
+	</script>
+</body>
+</html>
