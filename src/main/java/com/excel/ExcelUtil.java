@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
  * Excel导出实现类
  * @author 11277
  *
- * 2018年11月28号
+ * 2018.11.28
  */
 @Component
 public class ExcelUtil {
